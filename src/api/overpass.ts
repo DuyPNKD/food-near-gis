@@ -1,15 +1,10 @@
-import { Category, CategoryKey } from "../libs/enums";
-import { GeoPosition, PlaceNode } from "../libs/types";
+import {Category, CategoryKey} from "../libs/enums";
+import {GeoPosition, PlaceNode} from "../libs/types";
 
 const BASE_URL = "https://overpass-api.de/api/interpreter";
 
-export const fetchPlaces = async (
-    categoryKey: CategoryKey,
-    category: Category,
-    position: GeoPosition,
-): Promise<PlaceNode[]> => {
+export const fetchPlaces = async (categoryKey: CategoryKey, category: Category, position: GeoPosition): Promise<PlaceNode[]> => {
     try {
-
         const query = `
         [out:json][timeout:25];
         (node[${categoryKey}=${category}](around:5000, ${position.lat}, ${position.lon}););
@@ -22,12 +17,39 @@ export const fetchPlaces = async (
         const requestOptions = {
             method: "POST",
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
             },
-            body: formBody
+            body: formBody,
         };
         const response = await fetch(`${BASE_URL}`, requestOptions);
         const data = await response.json();
+
+        // Console log để xem dữ liệu API
+        console.log("=== OVERPASS API REQUEST ===");
+        console.log("Query:", query);
+        console.log("Request URL:", BASE_URL);
+        console.log("Request Body:", formBody);
+        console.log("=== OVERPASS API RESPONSE ===");
+        console.log("Full Response:", data);
+        console.log("Elements count:", data.elements?.length || 0);
+        console.log("First element:", data.elements?.[0]);
+
+        // Xem chi tiết từng quán ăn
+        if (data.elements?.length > 0) {
+            console.log("=== CHI TIẾT CÁC QUÁN ĂN ===");
+            data.elements.forEach((place: any, index: number) => {
+                console.log(`Quán ${index + 1}:`, {
+                    id: place.id,
+                    tên: place.tags?.name || "Không có tên",
+                    "địa chỉ": place.tags?.addr || "Không có địa chỉ",
+                    "tọa độ": `[${place.lat}, ${place.lon}]`,
+                    loại: place.tags?.amenity,
+                    tags: place.tags,
+                });
+            });
+            console.log("===============================");
+        }
+
         return data.elements;
     } catch (err) {
         console.error(`fetchMarkers Error: ${JSON.stringify(err)}`);
