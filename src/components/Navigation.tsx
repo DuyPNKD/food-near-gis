@@ -1,34 +1,34 @@
-import { navigationProps } from "./NavigationProps";
-import { Category, CategoryKey } from "../libs/enums";
+import {navigationProps} from "./NavigationProps";
+import {Category, CategoryKey} from "../libs/enums";
+import useQueryStore from "../store/useQueryStore";
 
 type Props = {
-  onClickCategory: (categoryKey: CategoryKey, category: Category) => void;
+    onClickCategory: (categoryKey: CategoryKey, category: Category) => void;
 };
 
-export default function Navigation({ onClickCategory }: Props) {
-  return (
-    <nav className="fixed top-2 w-content mx-10 h-20 flex space-x-4 items-center box-border px-8 lg:px-56 place-content-start">
-      {navigationProps.map(
-        ({ categoryKey, category, imgSrc, imgAlt, text }, index) => (
-          <button
-            key={index}
-            type="button"
-            className="text-gray-900 w-fit shadow-lg flex space-x-1 items-center bg-gray-100 border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            onClick={() => onClickCategory(categoryKey, category)}
-          >
-            <div className="flex items-center place-content-center w-4 md:w-8">
-              <img
-                src={imgSrc}
-                alt={imgAlt}
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="hidden md:flex items-center place-content-center text-sm">
-              {text}
-            </span>
-          </button>
-        )
-      )}
-    </nav>
-  );
+export default function Navigation({onClickCategory}: Props) {
+    const setSearchQuery = useQueryStore((state) => state.setSearchQuery);
+
+    const handleClick = (categoryKey: CategoryKey, category: Category, text: string) => {
+        setSearchQuery(text); // Hiển thị text tab vào ô tìm kiếm
+        onClickCategory(categoryKey, category);
+    };
+
+    return (
+        <nav className="flex items-center gap-3">
+            {navigationProps.map(({categoryKey, category, imgSrc, imgAlt, text}, index) => (
+                <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleClick(categoryKey, category, text)}
+                    className="inline-flex items-center gap-2 h-10 px-4 rounded-full
+                     bg-gray-100 border border-gray-300 shadow
+                     hover:bg-gray-200 text-sm"
+                >
+                    <img src={imgSrc} alt={imgAlt} className="w-5 h-5 object-contain" />
+                    <span className="hidden md:inline">{text}</span>
+                </button>
+            ))}
+        </nav>
+    );
 }

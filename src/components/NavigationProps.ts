@@ -1,26 +1,33 @@
-import { Category, CategoryKey } from "../libs/enums";
-import { NavigationProps } from "../libs/types";
+import {Category, CategoryKey} from "../libs/enums";
+import {NavigationProps} from "../libs/types";
 
 export const navigationProps: NavigationProps[] = [
     {
         categoryKey: CategoryKey.amenity,
-        category: Category.restaurant,
-        imgSrc: "./restaurant.svg",
-        imgAlt: "Restaurant Icon",
-        text: "Restaurants",
+        category: Category.fast_food,
+        imgSrc: "./fast_food.svg",
+        imgAlt: "Fast Food Icon",
+        text: "Đồ ăn nhanh",
     },
     {
         categoryKey: CategoryKey.amenity,
-        category: Category.library,
-        imgSrc: "./library.svg",
-        imgAlt: "Library Icon",
-        text: "Libraries",
+        category: Category.cafe,
+        imgSrc: "./cafe.svg",
+        imgAlt: "Cafe Icon",
+        text: "Quán cà phê",
     },
     {
-        categoryKey: CategoryKey.attraction,
-        category: Category.animal,
-        imgSrc: "./animal.svg",
-        imgAlt: "Animal Icon",
-        text: "Animals",
+        categoryKey: CategoryKey.amenity,
+        category: Category.food_court,
+        imgSrc: "./food_court.svg",
+        imgAlt: "Food Court Icon",
+        text: "Khu ẩm thực",
+    },
+    {
+        categoryKey: CategoryKey.amenity,
+        category: Category.bakery,
+        imgSrc: "./bakery.svg",
+        imgAlt: "Bakery Icon",
+        text: "Tiệm bánh",
     },
 ];

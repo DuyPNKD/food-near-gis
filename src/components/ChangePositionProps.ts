@@ -1,12 +1,12 @@
-import { PositionType } from "../libs/enums";
-import { ChangePositionProps } from "../libs/types";
+import {PositionType} from "../libs/enums";
+import {ChangePositionProps} from "../libs/types";
 
 export const changePositionProps: ChangePositionProps[] = [
     {
         positionType: PositionType.default,
-        imgPath: "./sweden.svg",
-        imgAlt: "Sweden Icon",
-        title: "Go to Sweden",
+        imgPath: "./vietnam.svg",
+        imgAlt: "Vietnam Icon",
+        title: "Go to Vietnam",
     },
     {
         positionType: PositionType.userCurrent,
