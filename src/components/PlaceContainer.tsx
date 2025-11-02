@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function PlaceContainer({currentPosition, places, selectedPosition, onclickCard, cardRefs, mode = "default"}: Props) {
-    const [showDetailsCards, setShowDetailsCards] = useState<string[]>([]);
+    // const [showDetailsCards, setShowDetailsCards] = useState<string[]>([]);
 
     const [openCardId, setOpenCardId] = useState<string | null>(null);
     const [showStart, setShowStart] = useState(false);
@@ -41,7 +41,7 @@ export default function PlaceContainer({currentPosition, places, selectedPositio
                     mode === "searchResult"
                         ? "absolute top-[60px] left-4 z-[3000] w-[320px] max-h-[70vh] rounded-b-2xl shadow-xl bg-white"
                         : "fixed bottom-3 left-0 lg:left-3 lg:top-[54px] lg:bottom-auto lg:h-[calc(100vh-70px)] bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl w-[300px]"
-                } flex flex-col overflow-y-auto divide-y divide-gray-200 p-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100`}
+                } flex flex-col overflow-y-auto overflow-x-visible divide-y divide-gray-200 p-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100`}
                 style={{overscrollBehavior: "contain"}}
                 onScroll={(event) => {
                     const target = event.target as HTMLElement;
