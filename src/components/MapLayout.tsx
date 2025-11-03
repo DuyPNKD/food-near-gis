@@ -16,8 +16,8 @@ import {useQuery} from "@tanstack/react-query";
 import useQueryStore from "../store/useQueryStore";
 import SearchBox from "./SearchBox";
 import SearchResultList from "./SearchResultList";
-
-import {createPortal} from "react-dom";
+import {Polyline} from "react-leaflet";
+import * as L from "leaflet";
 
 // Component: LocationMarker
 // Mục đích: quản lý vị trí hiện tại trên map (đồng bộ với store, flyTo, click để đặt vị trí)
@@ -99,6 +99,24 @@ function SearchResultMarkers() {
             ))}
         </>
     );
+}
+
+function RenderRoute() {
+    const route = useMapStore((state) => state.route);
+    const map = useMap();
+
+    useEffect(() => {
+        if (route) {
+            const coords = (route.geometry.coordinates as [number, number][]).map((c): L.LatLngTuple => [c[1], c[0]]);
+            const bounds = L.polyline(coords as L.LatLngExpression[]).getBounds();
+            map.fitBounds(bounds, {padding: [40, 40]});
+        }
+    }, [route, map]);
+
+    if (!route) return null;
+
+    const coords = (route.geometry.coordinates as [number, number][]).map((c): L.LatLngTuple => [c[1], c[0]]);
+    return <Polyline positions={coords} color="blue" weight={4} opacity={0.8} />;
 }
 
 export default function MapLayout() {
@@ -189,6 +207,7 @@ export default function MapLayout() {
         setFlyToPositionType(positionType);
         setStoreFlyToPositionType(positionType);
     };
+    const route = useMapStore((state) => state.route);
 
     // Render UI chính: MapContainer + controls + danh sách places
     return (
@@ -199,6 +218,9 @@ export default function MapLayout() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
+                {/* 🧭 Vẽ đường đi nếu có */}
+                <RenderRoute />
 
                 {/* 👉 Marker kết quả từ Nominatim */}
                 <SearchResultMarkers />
@@ -249,6 +271,13 @@ export default function MapLayout() {
 
             {/* Hiển thị lỗi nếu không lấy được dữ liệu */}
             {error ? <>Cannot get places data, please try again later</> : null}
+
+            {route && (
+                <div className="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow text-sm z-[1000]">
+                    <p>📏 {(route.distance / 1000).toFixed(2)} km</p>
+                    <p>🕒 {(route.duration / 60).toFixed(0)} phút</p>
+                </div>
+            )}
         </div>
     );
 }

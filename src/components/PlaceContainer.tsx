@@ -3,6 +3,8 @@ import PlaceCard from "./PlaceCard";
 import {GeoPosition, PlaceNode} from "../libs/types";
 import {distance, getCurrentDimension} from "../libs/utils";
 import {largeScreenMinWidth} from "../libs/constants";
+import {fetchRoute} from "../api/osrm";
+import useMapStore from "../store/useMapStore";
 
 type Props = {
     currentPosition: GeoPosition;
@@ -21,6 +23,10 @@ export default function PlaceContainer({currentPosition, places, selectedPositio
 
     const [showEnd, setShowEnd] = useState(true);
 
+    const setRoute = useMapStore((state) => state.setRoute);
+    const clearRoute = useMapStore((state) => state.clearRoute);
+    const [storePosition] = useMapStore((state) => [state.position]);
+
     const onShowDetails = (id: string): void => {
         setOpenCardId(id); // chỉ mở 1 card duy nhất
     };
@@ -33,6 +39,21 @@ export default function PlaceContainer({currentPosition, places, selectedPositio
         const distB = distance(currentPosition.lat, currentPosition.lon, b.lat, b.lon);
         return distA - distB; // tăng dần: gần nhất trước
     });
+    const handleClickCard = async (position: GeoPosition) => {
+        // Gọi callback gốc (đánh dấu selected card, scroll,...)
+        onclickCard(position);
+
+        // Xóa tuyến đường cũ (nếu có)
+        clearRoute();
+
+        try {
+            // Gọi OSRM để lấy route mới
+            const route = await fetchRoute([storePosition.lat, storePosition.lon], [position.lat, position.lon]);
+            if (route) setRoute(route);
+        } catch (err) {
+            console.error("Không thể lấy chỉ đường:", err);
+        }
+    };
 
     return places.length > 0 ? (
         <>
@@ -71,7 +92,7 @@ export default function PlaceContainer({currentPosition, places, selectedPositio
                             if (element) cardRefs.current[index] = element;
                         }}
                         key={place.id}
-                        onclickCard={onclickCard}
+                        onclickCard={handleClickCard}
                         onShowDetails={onShowDetails}
                         onCloseDetails={onCloseDetails}
                         isSelected={selectedPosition !== null && selectedPosition.lat === place.lat && selectedPosition.lon === place.lon}
