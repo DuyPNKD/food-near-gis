@@ -10,7 +10,7 @@ export default function Navigation({onClickCategory}: Props) {
     const setSearchQuery = useQueryStore((state) => state.setSearchQuery);
 
     const handleClick = (categoryKey: CategoryKey, category: Category, text: string) => {
-        setSearchQuery(text); // Hiển thị text tab vào ô tìm kiếm
+        setSearchQuery(text, true); // 👈 fromTab = true
         onClickCategory(categoryKey, category);
     };
 

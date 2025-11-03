@@ -15,6 +15,8 @@ import ChangePositionContainer from "./ChangePositionContainer";
 import {useQuery} from "@tanstack/react-query";
 import useQueryStore from "../store/useQueryStore";
 import SearchBox from "./SearchBox";
+import SearchResultList from "./SearchResultList";
+
 import {createPortal} from "react-dom";
 
 // Component: LocationMarker
@@ -74,6 +76,31 @@ function LocationMarker({flyToPositionType}: Props) {
     return position === null ? null : <MapMarker position={{lat: position.lat, lon: position.lon}} text={YOU_ARE_HERE} />;
 }
 
+function SearchResultMarkers() {
+    const searchResults = useQueryStore((state) => state.searchResults);
+    const selectedResult = useQueryStore((state) => state.selectedSearchResult);
+    const map = useMap();
+
+    useEffect(() => {
+        if (selectedResult) {
+            map.flyTo([selectedResult.lat, selectedResult.lon], 16, {animate: true});
+        } else if (searchResults.length > 0) {
+            const first = searchResults[0];
+            map.flyTo([first.lat, first.lon], 13, {animate: true});
+        }
+    }, [selectedResult, searchResults, map]);
+
+    if (searchResults.length === 0) return null;
+
+    return (
+        <>
+            {searchResults.map((r) => (
+                <MapMarker key={r.id} position={{lat: r.lat, lon: r.lon}} text={r.name} />
+            ))}
+        </>
+    );
+}
+
 export default function MapLayout() {
     // State local: kiểm soát kiểu flyTo và vị trí hiện tại
     const [flyToPositionType, setFlyToPositionType] = useState<PositionType>(PositionType.useStore);
@@ -93,6 +120,8 @@ export default function MapLayout() {
         queryFn: () => fetchPlaces(storeCategoryKey, storeCategory, position),
         staleTime: 10000,
     });
+
+    const [searchResults] = useQueryStore((state) => [state.searchResults]);
 
     // Giới hạn số place hiển thị trên UI để tránh quá nhiều marker
     const toDisplayPlaces = useMemo(() => data?.slice(0, displayedPlaceCount), [data]);
@@ -171,6 +200,9 @@ export default function MapLayout() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
+                {/* 👉 Marker kết quả từ Nominatim */}
+                <SearchResultMarkers />
+
                 {/* Render các custom marker cho từng place hiển thị */}
                 {toDisplayPlaces?.map((place) => (
                     <CustomMapMarker
@@ -198,17 +230,19 @@ export default function MapLayout() {
                 <Navigation onClickCategory={onClickCategory} /> {/* KHÔNG fixed bên trong */}
             </div>
 
-            {/* Danh sách kết quả: hiển thị nối liền ô tìm kiếm */}
-            {/* Danh sách kết quả: hiển thị nối liền ô tìm kiếm */}
-            {/* Danh sách kết quả: hiển thị nối liền ô tìm kiếm */}
-            {/* Danh sách place hiển thị phía dưới */}
-            <PlaceContainer
-                cardRefs={cardRefs}
-                currentPosition={position}
-                places={toDisplayPlaces ?? []}
-                selectedPosition={selectedPosition}
-                onclickCard={(position) => setSelectedPosition(position)}
-            />
+            {/* 👇 Danh sách kết quả Nominatim hiển thị dưới ô tìm kiếm */}
+            <SearchResultList />
+
+            {/* Danh sách place chỉ hiển thị nếu không có kết quả Nominatim */}
+            {searchResults.length === 0 && (
+                <PlaceContainer
+                    cardRefs={cardRefs}
+                    currentPosition={position}
+                    places={toDisplayPlaces ?? []}
+                    selectedPosition={selectedPosition}
+                    onclickCard={(position) => setSelectedPosition(position)}
+                />
+            )}
 
             {/* Hiển thị loading khi fetching */}
             {isLoading ? <Loading /> : null}
