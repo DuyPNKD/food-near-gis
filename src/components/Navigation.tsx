@@ -1,15 +1,25 @@
 import {navigationProps} from "./NavigationProps";
 import {Category, CategoryKey} from "../libs/enums";
 import useQueryStore from "../store/useQueryStore";
+import useMapStore from "../store/useMapStore";
 
 type Props = {
     onClickCategory: (categoryKey: CategoryKey, category: Category) => void;
 };
 
 export default function Navigation({onClickCategory}: Props) {
-    const setSearchQuery = useQueryStore((state) => state.setSearchQuery);
+    const [setSearchQuery, setSearchResults, setSelectedSearchResult] = useQueryStore((state) => [
+        state.setSearchQuery,
+        state.setSearchResults,
+        state.setSelectedSearchResult,
+    ]);
+    const clearRoute = useMapStore((state) => state.clearRoute);
 
     const handleClick = (categoryKey: CategoryKey, category: Category, text: string) => {
+        // Xóa kết quả tìm kiếm Nominatim và route khi chuyển sang category
+        setSearchResults([]);
+        setSelectedSearchResult(null); // Xóa selected search result
+        clearRoute(); // Xóa tuyến đường cũ
         setSearchQuery(text, true); // 👈 fromTab = true
         onClickCategory(categoryKey, category);
     };

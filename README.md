@@ -1,537 +1,578 @@
-<a name="top"></a>
+# 🗺️ Ứng dụng Tìm kiếm Địa điểm Gần đây
 
-<!-- PROJECT SHIELDS -->
+Một ứng dụng web GIS (Geographic Information System) hiện đại được xây dựng với React và TypeScript, cho phép người dùng tìm kiếm và khám phá các địa điểm xung quanh vị trí hiện tại hoặc bất kỳ đâu trên thế giới.
 
-<!-- [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url] -->
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0.2-3178C6?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-4.4.5-646CFF?logo=vite)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3.3-38B2AC?logo=tailwind-css)
 
+---
 
+## 📋 Mục lục
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <h3 align="center">Project Features and Issues</h3>
+-   [Giới thiệu](#-giới-thiệu)
+-   [Tính năng chính](#-tính-năng-chính)
+-   [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
+-   [Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
+-   [Cài đặt](#-cài-đặt)
+-   [Cách sử dụng](#-cách-sử-dụng)
+-   [Cấu trúc dự án](#-cấu-trúc-dự-án)
+-   [APIs và Dịch vụ](#-apis-và-dịch-vụ)
+-   [Tối ưu hiệu năng](#-tối-ưu-hiệu-năng)
+-   [Hướng dẫn phát triển](#-hướng-dẫn-phát-triển)
+-   [Troubleshooting](#-troubleshooting)
+-   [Đóng góp](#-đóng-góp)
+-   [Giấy phép](#-giấy-phép)
 
-  <p align="center">
-    A finding nearby places app built with React, Vite, Flowbite, Tailwind CSS, leafletjs, React Leaflet, Overpass API, zustand, and TypeScript.
-  </p>
-</div>
+---
 
+## 🎯 Giới thiệu
 
+**Ứng dụng Tìm kiếm Địa điểm Gần đây** là một ứng dụng web GIS cho phép người dùng:
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#completed-features">Completed Features</a></li>
-    <li><a href="#to-do-tasks">To-Do Tasks</a></li>
-    <li><a href="#packages-used">Packages Used</a></li>
-    <li><a href="#issues-encountered-and-solutions">Issues Encountered and Solutions</a></li>
-    <li><a href="#extra-features">Extra Features</a></li>
-    <li><a href="#reference">Reference</a></li>
-  </ol>
-</details>
+-   🔍 **Tìm kiếm địa điểm theo danh mục**: Nhà hàng, Cafe, Thư viện, BBQ, Fast Food, Bakery, Food Court, và nhiều hơn nữa
+-   🌍 **Tìm kiếm địa điểm toàn cầu**: Tìm kiếm bất kỳ địa điểm nào trên thế giới bằng tên
+-   📍 **Hiển thị bản đồ tương tác**: Sử dụng OpenStreetMap với React Leaflet
+-   🛣️ **Tính toán tuyến đường**: Xem khoảng cách và thời gian di chuyển đến địa điểm
+-   💫 **Tương tác hai chiều**: Click marker → scroll đến card, click card → highlight marker
 
+Ứng dụng sử dụng dữ liệu từ OpenStreetMap thông qua Overpass API, Nominatim API và OSRM để cung cấp trải nghiệm người dùng phong phú và chính xác.
 
+---
 
-<!-- COMPLETED FEATURES -->
-## Completed Features:
+## ✨ Tính năng chính
 
-1. Utilized React Query for efficient data fetching and caching, enhancing performance.
-2. Expanded categories of places for more comprehensive search options.
-3. Implemented storage of the user's current position for enhanced user experience.
-4. Added loading UI during data queries for better visual feedback.
-5. Enabled single click navigation to any location worldwide directly on the map.
-6. Incorporated onScroll events to dynamically adjust card container styles.
-7. Implemented functionality to scroll into the corresponding card after clicking on a marker.
+### 1. 🗺️ Tìm kiếm địa điểm theo danh mục
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+-   **10+ danh mục địa điểm**:
 
+    -   🍽️ Nhà hàng (Restaurant)
+    -   ☕ Cafe
+    -   📚 Thư viện (Library)
+    -   🍖 BBQ
+    -   🍔 Fast Food
+    -   🥐 Bakery
+    -   🏪 Food Court
+    -   🥡 Takeaway
+    -   🍱 Canteen
+    -   🏪 Kiosk
+    -   🐾 Animal
 
+-   **Tính năng**:
+    -   Tìm kiếm trong bán kính **1.5km** từ vị trí hiện tại
+    -   Giới hạn tối đa **100 địa điểm** để tối ưu hiệu năng
+    -   Icon marker tùy chỉnh cho từng danh mục
+    -   Hiển thị khoảng cách từ vị trí hiện tại
 
-<!-- TO-DO TASKS -->
-## To-Do Tasks:
+### 2. 🔍 Tìm kiếm địa điểm bằng tên
 
-- Pass Refs to Child Components using forwardRef.
-- Implement deep refs forwarding for complex component structures.
-- Utilize useRef to store a list of elements efficiently.
-- Add custom attributes to div elements for enhanced styling flexibility.
-- Create custom hooks for map-related functionalities.
-- Explore testing React components using Vitest.
+-   Tìm kiếm toàn cầu với **Nominatim API**
+-   Hỗ trợ nhiều ngôn ngữ (tiếng Việt, tiếng Anh, v.v.)
+-   Kết quả hiển thị dưới dạng danh sách và marker trên bản đồ
+-   Tự động fly to vị trí khi chọn kết quả
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### 3. 📍 Quản lý vị trí
 
+-   **Vị trí hiện tại**: Lấy tự động từ Geolocation API
+-   **Vị trí mặc định**: Hà Nội, Việt Nam (21.0277644, 105.8341598)
+-   **Click trên bản đồ**: Di chuyển đến vị trí bất kỳ trên thế giới
+-   **Lưu trữ vị trí**: Sử dụng Zustand store để persist state
 
+### 4. 🎯 Marker và tương tác
 
-<!-- PACKAGES USED -->
-## Packages Used:
+-   **Marker tùy chỉnh**:
 
-- Flowbite
-- Tailwind CSS
-- Leafletjs
-- React Leaflet
-- Overpass API
-- Zustand
-- React Query
+    -   Icon khác nhau cho từng danh mục
+    -   Màu sắc phân biệt theo loại địa điểm
+    -   Marker "You are here" cho vị trí hiện tại
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+-   **Tương tác**:
+    -   Click marker → Tự động scroll đến card tương ứng
+    -   Click card → Highlight marker và fly to vị trí
+    -   Popup hiển thị thông tin chi tiết (giờ mở cửa, số điện thoại, website)
 
+### 5. 🛣️ Tính toán tuyến đường
 
-## Issues Encountered and Solutions
+-   Sử dụng **OSRM API** để tính toán tuyến đường
+-   Hiển thị đường đi trên bản đồ (Polyline màu xanh)
+-   Thông tin chi tiết:
+    -   **Khoảng cách** (km)
+    -   **Thời gian di chuyển** (phút)
+-   Tự động fit bounds để hiển thị toàn bộ tuyến đường
 
-### 'require' is not defined
+### 6. ⚡ Tối ưu hiệu năng
 
-In tailwind.config.js on `plugins: [require("flowbite/plugin")],`
+-   **React Query caching**: Tự động cache kết quả API
+-   **Session Storage**: Cache dữ liệu Overpass để tránh gọi API lại
+-   **Fallback mirrors**: Tự động chuyển sang server khác nếu server chính lỗi
+-   **Lazy loading**: Chỉ render markers cần thiết
+-   **Debounce**: Tối ưu tìm kiếm để giảm số lần gọi API
 
-**Solution** <br>
-ignore eslint
+### 7. 🎨 UX/UI
 
-```
-// eslint-disable-next-line no-undef
-  plugins: [require("flowbite/plugin")],
-```
+-   **Loading state**: Hiển thị spinner khi đang fetch data
+-   **Error handling**: Xử lý lỗi một cách graceful với toast notifications
+-   **Responsive design**: Hoạt động tốt trên mobile và desktop
+-   **Smooth animations**: Fly to animation, scroll animations
+-   **Custom scrollbar**: UI đẹp hơn với tailwind-scrollbar
 
-### Flex col auto wrap child element
+---
 
-**Solution** <br>
-Change the parent layout to `lg:inline-block` instead of `lg:flex-col`
+## 🛠️ Công nghệ sử dụng
 
-### Overflow scroll does not work when flex row
+### Frontend Framework & Libraries
 
-**Solution** <br>
-Add missing width: 100vw; `w-screen` to the flex container
+| Công nghệ         | Phiên bản | Mục đích                          |
+| ----------------- | --------- | --------------------------------- |
+| **React**         | 18.2.0    | Framework JavaScript cho UI       |
+| **TypeScript**    | 5.0.2     | Type safety và code quality       |
+| **Vite**          | 4.4.5     | Build tool nhanh, hiện đại        |
+| **React Leaflet** | 4.2.1     | Tích hợp bản đồ Leaflet vào React |
+| **Leaflet**       | 1.9.4     | Thư viện bản đồ mã nguồn mở       |
 
-### Flex nowrap does not work when flex row
+### State Management & Data Fetching
 
-**Solution** <br>
-Add missing height `h-full` to the flex element
+| Công nghệ          | Phiên bản | Mục đích                       |
+| ------------------ | --------- | ------------------------------ |
+| **Zustand**        | 4.4.1     | Quản lý state (nhẹ, đơn giản)  |
+| **TanStack Query** | 4.35.0    | Data fetching, caching tự động |
 
-### Default scroll looks ugly
+### Styling
 
-**Solution** <br>
-https://www.npmjs.com/package/tailwind-scrollbar
+| Công nghệ        | Phiên bản | Mục đích                    |
+| ---------------- | --------- | --------------------------- |
+| **Tailwind CSS** | 3.3.3     | Utility-first CSS framework |
+| **Flowbite**     | 1.8.1     | UI component library        |
+| **Lucide React** | 0.552.0   | Icon library                |
 
-### react-leaflet does not show correctly on the page
+### APIs & Services
 
-**Solution** <br>
-https://leafletjs.com/examples/quick-start/  
-does not work
+| API               | Mục đích                              |
+| ----------------- | ------------------------------------- |
+| **Overpass API**  | Lấy dữ liệu địa điểm từ OpenStreetMap |
+| **Nominatim API** | Tìm kiếm địa điểm (geocoding)         |
+| **OSRM**          | Tính toán tuyến đường                 |
 
-https://www.npmjs.com/package/react-leaflet?activeTab=dependencies
-does not work
+### Công nghệ khác
 
-https://stackoverflow.com/questions/40365440/react-leaflet-map-not-correctly-displayed
+-   **Session Storage**: Cache dữ liệu tạm thời
+-   **HTML5 Geolocation API**: Lấy vị trí người dùng
 
-https://leafletjs.com/examples/quick-start/
-it works
+---
 
-### Add link and script and width and height
+## 💻 Yêu cầu hệ thống
 
-Add the below codes into **index.html**
+-   **Node.js**: >= 16.0.0
+-   **npm**: >= 7.0.0 (hoặc yarn >= 1.22.0)
+-   **Trình duyệt**: Chrome, Firefox, Edge, Safari (phiên bản gần đây)
+-   **Kết nối Internet**: Cần thiết để gọi các API (Overpass, Nominatim, OSRM)
 
-```
-<link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-```
+---
 
-```
- <script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-  crossorigin=""
-></script>
-```
+## 🚀 Cài đặt
 
-Add below codes into **src\App.css**
+### Bước 1: Clone repository
 
-```
-.leaflet-container {
-  width: 100wh;
-  height: 100vh;
-}
-```
-
-### Default map is on the top of every component
-
-**Solution** <br>
-https://wordpress.org/support/topic/leaflet-map-z-index-and-css/
-
-Add the style `z-index: 0 !important;` to the leaflet container class `.leaflet-container` in **src\App.css**
-
-Change the order of components, make leaflet container component to be the first render component. For example, in **src\App.tsx**, where `<MapLayout />` is the component that includes leaflet container:
-
-```
-import "./App.css";
-import MapLayout from "./MapLayout";
-import Navigation from "./Navigation";
-import ResultContainer from "./ResultContainer";
-
-function App() {
-  return (
-    <main className="min-h-screen min-w-screen flex">
-      <MapLayout />
-      <Navigation />
-      <ResultContainer />
-    </main>
-  );
-}
-
-export default App;
+```bash
+git clone <repository-url>
+cd nearby-places-react-leaflet-overpass-api
 ```
 
-In **src\MapLayout.tsx**
+### Bước 2: Cài đặt dependencies
 
-```
-import React from "react";
-import CurrentLocationButton from "./CurrentLocationButton";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+Sử dụng npm:
 
-export default function MapLayout() {
-  return (
-    <div className="w-screen h-screen ">
-      <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-
-      <div className="fixed w-10 aspect-square flex items-center place-content-center bottom-64 right-8 lg:bottom-24 lg:right-24">
-        <CurrentLocationButton />
-      </div>
-    </div>
-  );
-}
+```bash
+npm install
 ```
 
-### Error: `Argument of type 'LatLng' is not assignable to parameter of type 'SetStateAction<null>'. Type 'LatLng' provides no match for the signature '(prevState: null): null'.`
+Hoặc sử dụng yarn:
 
-**Solution** <br>
-Change `useState(null);` to `useState<LatLng | null>(null);`
-
-## Tasks
-
-### Get the user's current location and mark it on the map
-
-https://react-leaflet.js.org/docs/example-events/
-
-https://stackoverflow.com/questions/66500181/how-to-locate-react-leaflet-map-to-users-current-position-and-get-the-borders-f
-
-Add onClick event to the custom go to current location button `onClick={() => setGoToCurrentPosition(true)}`, to change the state `const [goToCurrentPosition, setGoToCurrentPosition] = useState(false);`
-
-Monitor the state change in the `LocationMarker` component. And add the condition in the `useEffect`, only go to the current location when the state variable `goToCurrent` is true.
-
-Full codes:
-
-```
-import { LatLng } from "leaflet";
-import { useEffect, useState } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
-import CurrentLocationIcon from "./CurrentLocationIcon";
-
-type Props = {
-  goToCurrentPosition: boolean;
-};
-
-function LocationMarker({ goToCurrentPosition }: Props) {
-  const [position, setPosition] = useState<LatLng | null>(null);
-
-  const [goToCurrent, setGoToCurrent] = useState(false);
-
-  const map = useMap();
-
-  useEffect(() => {
-    setGoToCurrent(goToCurrentPosition);
-  }, [goToCurrentPosition]);
-
-  useEffect(() => {
-    if (goToCurrent) {
-      map.locate().on("locationfound", function (e) {
-        setPosition(e.latlng);
-        map.flyTo(e.latlng, map.getZoom());
-      });
-    }
-  }, [goToCurrent]);
-
-  return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  );
-}
-
-export default function MapLayout() {
-  const [goToCurrentPosition, setGoToCurrentPosition] = useState(false);
-
-  return (
-    <div className="w-screen h-screen ">
-      <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-
-        <LocationMarker goToCurrentPosition={goToCurrentPosition} />
-      </MapContainer>
-
-      <button
-        className="fixed w-14 aspect-square flex items-center place-content-center bottom-64 right-8 lg:bottom-24 lg:right-24 backdrop-blur shadow-lg p-2 rounded-full"
-        onClick={() => setGoToCurrentPosition(true)}
-      >
-        <CurrentLocationIcon />
-      </button>
-    </div>
-  );
-}
+```bash
+yarn install
 ```
 
-### List 10 restaurants near the current location
+### Bước 3: Chạy ứng dụng
 
-https://opensource.com/article/18/5/how-build-your-first-gis-app
+**Development mode:**
 
-https://www.npmjs.com/package/query-overpass
-
-https://codesandbox.io/s/b7olo?file=/src/service/overpass.ts
-
-### Try out overpass api on Postman
-
-#### Url
-
-https://overpass-api.de/api/interpreter
-
-#### Method
-
-POST
-
-#### Header
-
-`Content-Type: application/x-www-form-urlencoded;charset=UTF-8`
-
-#### Request body
-
-Query Castles
-
-```
-[out:json];(way[historic=castle](around:10000, 50.0874654,14.4212535);
-relation[historic=castle](around:10000, 50.0874654,14.4212535););
-out body;>;out skel qt;
+```bash
+npm run dev
 ```
 
-Query schools
+hoặc
+
+```bash
+yarn dev
+```
+
+Ứng dụng sẽ chạy tại `http://localhost:5173` (hoặc port khác nếu 5173 đã được sử dụng).
+
+**Build cho production:**
+
+```bash
+npm run build
+```
+
+**Preview production build:**
+
+```bash
+npm run preview
+```
+
+**Linting:**
+
+```bash
+npm run lint
+```
+
+---
+
+## 📖 Cách sử dụng
+
+### Tìm kiếm địa điểm theo danh mục
+
+1. Mở ứng dụng trong trình duyệt
+2. Cho phép truy cập vị trí của bạn (nếu được hỏi)
+3. Click vào một icon danh mục (ví dụ: Nhà hàng, Cafe) trên thanh navigation
+4. Các địa điểm trong bán kính 1.5km sẽ hiển thị trên bản đồ và trong danh sách bên phải
+
+### Tìm kiếm địa điểm bằng tên
+
+1. Nhập tên địa điểm vào ô tìm kiếm (ví dụ: "Tháp Eiffel", "Hoàn Kiếm")
+2. Chọn một kết quả từ danh sách
+3. Bản đồ sẽ tự động fly to vị trí đó
+
+### Xem chi tiết địa điểm
+
+-   Click vào một marker trên bản đồ để xem popup với thông tin chi tiết
+-   Click vào một card trong danh sách để highlight marker tương ứng
+-   Card sẽ tự động scroll vào view khi bạn click marker
+
+### Tính toán tuyến đường
+
+1. Click vào một địa điểm trên bản đồ
+2. Chọn "Xem chi tiết" hoặc tương tự trong popup
+3. Tuyến đường sẽ được tính toán và hiển thị trên bản đồ
+4. Xem khoảng cách và thời gian di chuyển
+
+### Di chuyển đến vị trí khác
+
+-   **Vị trí hiện tại**: Click nút "Vị trí hiện tại" để quay về vị trí GPS
+-   **Click trên bản đồ**: Click vào bất kỳ đâu trên bản đồ để di chuyển đến đó
+-   **Vị trí mặc định**: Sử dụng nút "Vị trí mặc định" để quay về Hà Nội
+
+---
+
+## 📁 Cấu trúc dự án
+
+```
+nearby-places-react-leaflet-overpass-api/
+├── public/                    # Tài nguyên tĩnh
+│   ├── *.svg                 # Icons cho markers
+│   └── vite.svg              # Logo Vite
+│
+├── src/
+│   ├── api/                  # API clients
+│   │   ├── overpass.ts       # Overpass API - lấy địa điểm
+│   │   ├── nominatim.ts      # Nominatim API - tìm kiếm
+│   │   └── osrm.ts           # OSRM API - tuyến đường
+│   │
+│   ├── components/           # React components
+│   │   ├── MapLayout.tsx     # Component chính - bản đồ
+│   │   ├── Navigation.tsx    # Thanh chọn danh mục
+│   │   ├── SearchBox.tsx     # Ô tìm kiếm
+│   │   ├── PlaceCard.tsx     # Card hiển thị địa điểm
+│   │   ├── MapMarker.tsx     # Marker trên bản đồ
+│   │   ├── CustomMapMarker.tsx
+│   │   ├── PlaceContainer.tsx
+│   │   ├── SearchResultList.tsx
+│   │   ├── ChangePositionButton.tsx
+│   │   ├── ChangePositionContainer.tsx
+│   │   ├── Loading.tsx
+│   │   ├── Toast.tsx
+│   │   └── *.ts              # Type definitions
+│   │
+│   ├── store/                # Zustand stores
+│   │   ├── useMapStore.ts    # State cho map (vị trí, route, marker)
+│   │   └── useQueryStore.ts  # State cho query (category, search)
+│   │
+│   ├── libs/                 # Utilities & constants
+│   │   ├── constants.ts      # Hằng số (default position, marker icons)
+│   │   ├── enums.ts          # Enums (Category, PositionType)
+│   │   ├── types.ts          # TypeScript types
+│   │   └── utils.ts          # Helper functions
+│   │
+│   ├── App.tsx               # Entry point component
+│   ├── App.css               # Global styles
+│   ├── main.tsx              # React entry point
+│   ├── index.css             # Tailwind CSS imports
+│   ├── queryProvider.tsx     # React Query provider setup
+│   └── vite-env.d.ts         # Vite type definitions
+│
+├── .eslintrc.cjs             # ESLint configuration
+├── .gitignore                # Git ignore rules
+├── index.html                # HTML template
+├── package.json              # Dependencies & scripts
+├── postcss.config.js         # PostCSS configuration
+├── tailwind.config.ts        # Tailwind CSS configuration
+├── tsconfig.json             # TypeScript configuration
+├── tsconfig.node.json        # TypeScript config for Node
+├── vite.config.ts            # Vite configuration
+├── LICENSE                   # License file
+└── README.md                 # File này
+```
+
+### Giải thích các thư mục chính
+
+-   **`src/api/`**: Chứa các hàm gọi API (Overpass, Nominatim, OSRM)
+-   **`src/components/`**: Các React components có thể tái sử dụng
+-   **`src/store/`**: Zustand stores để quản lý global state
+-   **`src/libs/`**: Utilities, constants, types, và enums
+-   **`public/`**: Tài nguyên tĩnh (icons, images)
+
+---
+
+## 🔌 APIs và Dịch vụ
+
+### 1. Overpass API
+
+**Mục đích**: Lấy dữ liệu địa điểm từ OpenStreetMap
+
+**Endpoint**: `https://overpass-api.de/api/interpreter`
+
+**Cách sử dụng**:
+
+-   Query Overpass QL để tìm các địa điểm theo:
+    -   Vị trí (latitude, longitude)
+    -   Bán kính tìm kiếm (mặc định: 1500m)
+    -   Loại địa điểm (amenity, shop, tourism)
+
+**Ví dụ query**:
 
 ```
 [out:json];
-(node[amenity=school](around:10000, 50.0874654,14.4212535););
-out body;>;out skel qt;
+(node[amenity=restaurant](around:1500, 21.0277644, 105.8341598););
+out body;
 ```
 
-### Save the current position for sharable use
+### 2. Nominatim API
 
-Use zustand
+**Mục đích**: Tìm kiếm địa điểm bằng tên (Geocoding)
 
-### Show restaurants on the map
+**Endpoint**: `https://nominatim.openstreetmap.org/search`
 
-Change the icons
-https://codesandbox.io/s/react-leaflet-icon-material-mx1iu?file=/src/index.js
+**Cách sử dụng**:
 
-### Get distance information from the current position in km
+-   Tìm kiếm theo tên địa điểm
+-   Trả về danh sách kết quả với lat/lon
+-   Hỗ trợ nhiều ngôn ngữ
 
-https://www.geodatasource.com/developers/javascript
+### 3. OSRM API
 
-### Change the corresponding restaurant card style after clicking the marker
+**Mục đích**: Tính toán tuyến đường và khoảng cách
 
-Add `eventHandlers` in `Marker`
+**Endpoint**: `http://router.project-osrm.org/route/v1`
 
-```
-...
+**Cách sử dụng**:
 
-<Marker
-      position={[position.lat, position.lon]}
-      icon={customMarkerIcon}
-      eventHandlers={{
-        click: (e) => {
-          onClickMarker(e);
-        },
-      }}
-    >
-      <Popup>{text}</Popup>
-    </Marker>
+-   Tính toán tuyến đường giữa 2 điểm
+-   Trả về polyline và thông tin khoảng cách/thời gian
 
-...
+---
 
-```
+## ⚡ Tối ưu hiệu năng
 
-In the handler function, set the state variable using the selected position from the event object
+### React Query Caching
 
-```
-...
+-   Tự động cache kết quả API trong 10 giây
+-   Giảm số lần gọi API không cần thiết
+-   Tự động refetch khi data stale
 
-  const [selectedPosition, setSelectedPosition] = useState<GeoPosition | null>(
-    null
-  );
+### Session Storage
 
-  ...
+-   Cache dữ liệu Overpass để tránh gọi API lại
+-   Key format: `overpass-{category}-{lat}-{lon}`
+-   Tự động clear khi session kết thúc
 
-  function onClickCustomMapMarker(event: LeafletMouseEvent): void {
-    setSelectedPosition({ lat: event.latlng.lat, lon: event.latlng.lng });
-  }
+### Fallback Mirrors
 
-...
+-   Nếu server Overpass chính lỗi, tự động chuyển sang server khác
+-   Danh sách mirrors: overpass-api.de, overpass.kumi.systems, v.v.
 
-```
+### Giới hạn kết quả
 
-Render the selected card component if the position matches the position of the selected marker
+-   Chỉ hiển thị 100 địa điểm đầu tiên
+-   Tránh quá tải UI và performance issues
 
-```
-...
+### Debounce
 
-export default function PlaceContainer({
-  currentPosition,
-  places,
-  selectedPosition,
-}: Props) {
-  if (places.length > 0) {
-    return (
-      <section>
-        {places.map((place) =>
-          selectedPosition !== null &&
-          selectedPosition.lat === place.lat &&
-          selectedPosition.lon === place.lon ? (
-            <PlaceCardSelected
+-   Tìm kiếm được debounce 300ms
+-   Giảm số lần gọi Nominatim API
 
-              ...
+---
 
-            />
-          ) : (
-            <PlaceCard
+## 🔧 Hướng dẫn phát triển
 
-              ...
+### Thêm danh mục mới
 
-            />
-          )
-        )}
-      </section>
-    );
-  } else {
-    return null;
-  }
+1. Thêm category vào `src/libs/enums.ts`:
+
+```typescript
+export enum Category {
+    // ... existing categories
+    new_category = "new_category",
 }
 ```
 
-## Extra Features
+2. Thêm icon vào `public/` (file SVG)
 
-### Use React Query for efficient data fetching and caching to increase performance
+3. Thêm marker icon props vào `src/libs/constants.ts`:
 
-#### Update and pass queryKey for query
-
-https://github.com/TanStack/query/discussions/3200
-
-...
-zustand
-
-### Edit data after calling API
-
-https://github.com/TanStack/query/discussions/530
-
-...
-useMemo
-
-### Single chick on the map go to anywhere in the world
-
-https://stackoverflow.com/questions/66288089/how-to-display-a-list-of-points-using-dbclick-in-react-leaflet-v-3-x
-
-### onScroll events for changing card container styles
-
-...
-
-### Scroll into the card after clicking on the corresponding marker
-
-#### Pass Refs to Child Components using forwardRef
-
-https://dmitripavlutin.com/react-forwardref/
-
-https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/forward_and_create_ref/
-
-#### Deep refs forwarding
-
-https://dmitripavlutin.com/react-forwardref/#4-deep-refs-forwarding
-
-...
-
-#### Storing an list of elements using useRef
-
-Possible solution: passing ref as props
-https://stackoverflow.com/questions/66764686/how-to-pass-a-ref-down-more-than-one-level-in-react
-
-https://eliaslog.pw/how-to-add-multiple-refs-to-one-useref-hook/
-
-Grand child component:
-
-```
-  ...
-
-<PlaceCard
-  ref={(element) => {
-  if (element) cardRefs.current[index] = element;
-  }}
-  key={place.id}
-
-  ...
+```typescript
+export const markerIconPropsDict: {[key: string]: MarkerIconProps} = {
+    // ... existing
+    [Category.new_category]: {
+        imagePath: "/new_category.svg",
+        backgroundColor: "#COLOR",
+    },
+};
 ```
 
-...
+4. Cập nhật navigation trong `src/components/Navigation.tsx`
 
-### Add custom attribute to div
+### Thay đổi bán kính tìm kiếm
 
-#### XXX does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'
+Chỉnh sửa trong `src/api/overpass.ts`:
 
-Solution
-https://stackoverflow.com/questions/46215614/property-does-not-exist-on-type-detailedhtmlprops-htmldivelement-with-react
-
-...
-
-### Create custom hooks
-
-https://www.freecodecamp.org/news/how-to-create-react-hooks/
-
-```
-const [showStart, setShowStart] = useState(false);
-
-const [showEnd, setShowEnd] = useState(true);
+```typescript
+const radius = 1500; // thay đổi giá trị này (đơn vị: mét)
 ```
 
-...
+### Customize marker icons
 
-### TypeScript: define the return type of the custom hook to be an array with multiple types
+Chỉnh sửa `markerIconPropsDict` trong `src/libs/constants.ts`:
 
-https://stackoverflow.com/questions/29382389/defining-array-with-multiple-types-in-typescript
+-   `imagePath`: Đường dẫn đến file SVG
+-   `backgroundColor`: Màu nền của marker
 
-...
+### Thêm tính năng mới
 
-## Reference
+1. Tạo component mới trong `src/components/`
+2. Thêm types nếu cần trong `src/libs/types.ts`
+3. Update store nếu cần state management
+4. Import và sử dụng trong `MapLayout.tsx` hoặc `App.tsx`
 
-https://github.com/othneildrew/Best-README-Template
+---
+
+## 🐛 Troubleshooting
+
+### Bản đồ không hiển thị
+
+**Vấn đề**: Leaflet map không render đúng
+
+**Giải pháp**:
+
+1. Đảm bảo đã import CSS của Leaflet trong `index.html`:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+```
+
+2. Kiểm tra z-index trong `App.css`:
+
+```css
+.leaflet-container {
+    z-index: 0 !important;
+}
+```
+
+### API không hoạt động
+
+**Vấn đề**: Overpass/Nominatim API trả về lỗi
+
+**Giải pháp**:
+
+-   Kiểm tra kết nối Internet
+-   API có rate limiting, đợi một chút và thử lại
+-   Kiểm tra console để xem lỗi chi tiết
+
+### Vị trí GPS không hoạt động
+
+**Vấn đề**: Không lấy được vị trí hiện tại
+
+**Giải pháp**:
+
+-   Cho phép truy cập vị trí trong trình duyệt
+-   Sử dụng HTTPS (Geolocation API yêu cầu HTTPS)
+-   Kiểm tra cài đặt quyền trình duyệt
+
+### Performance chậm với nhiều markers
+
+**Vấn đề**: Ứng dụng lag khi có nhiều địa điểm
+
+**Giải pháp**:
+
+-   Giảm `displayedPlaceCount` trong `constants.ts`
+-   Giảm bán kính tìm kiếm
+-   Sử dụng clustering markers (cần implement thêm)
+
+### TypeScript errors
+
+**Vấn đề**: Lỗi type khi build
+
+**Giải pháp**:
+
+```bash
+npm run lint
+```
+
+Sửa các lỗi được báo cáo.
+
+---
+
+## 🤝 Đóng góp
+
+Đóng góp cho dự án này rất được hoan nghênh! Vui lòng làm theo các bước sau:
+
+1. Fork repository
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Mở Pull Request
+
+### Coding Standards
+
+-   Sử dụng TypeScript cho type safety
+-   Tuân thủ ESLint rules
+-   Viết code dễ đọc và có comments khi cần
+-   Test các tính năng mới trước khi commit
+
+---
+
+## 📝 License
+
+Dự án này được phân phối dưới giấy phép được định nghĩa trong file `LICENSE`.
+
+---
+
+## 🙏 Lời cảm ơn
+
+-   [OpenStreetMap](https://www.openstreetmap.org/) - Dữ liệu bản đồ
+-   [Overpass API](https://overpass-api.de/) - API truy vấn dữ liệu
+-   [Nominatim](https://nominatim.org/) - Geocoding service
+-   [OSRM](http://project-osrm.org/) - Routing engine
+-   [Leaflet](https://leafletjs.com/) - Bản đồ library
+-   [React](https://reactjs.org/) - UI framework
+-   [Vite](https://vitejs.dev/) - Build tool
+
+---
+
+## 📧 Liên hệ
+
+Nếu có câu hỏi hoặc đề xuất, vui lòng mở một issue trên GitHub repository.
+
+---
+
+**Chúc bạn sử dụng ứng dụng vui vẻ! 🎉**

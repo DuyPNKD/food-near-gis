@@ -18,20 +18,28 @@ export default function SearchBox() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsFromTab(false);
-        setSearchQuery(inputValue, false);
-
+        
+        // Nếu người dùng tự gõ lại thì cho phép search Nominatim
         if (isFromTab) {
             console.log("Tìm kiếm từ tab — dùng Overpass / cơ chế cũ");
-            return;
+            setIsFromTab(false);
         }
 
-        try {
-            const data = await searchPlaces(inputValue);
-            setSearchResults(data);
-            console.log("Kết quả Nominatim:", data);
-        } catch (err) {
-            console.error(err);
+        setSearchQuery(inputValue, false);
+
+        // Nếu có query thì search Nominatim, nếu không thì clear results
+        if (inputValue.trim()) {
+            try {
+                const data = await searchPlaces(inputValue);
+                setSearchResults(data);
+                console.log("Kết quả Nominatim:", data);
+            } catch (err) {
+                console.error(err);
+                setSearchResults([]);
+            }
+        } else {
+            // Nếu query trống thì clear results
+            setSearchResults([]);
         }
     };
 
@@ -40,7 +48,10 @@ export default function SearchBox() {
             <input
                 type="text"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                    setInputValue(e.target.value);
+                    setIsFromTab(false); // đánh dấu đây là nhập tay, cho phép submit tìm kiếm
+                }}
                 placeholder="Tìm kiếm địa điểm..."
                 className="flex-1 text-sm bg-transparent border-0 outline-none placeholder-gray-400 px-3 focus:outline-none focus:ring-0"
             />

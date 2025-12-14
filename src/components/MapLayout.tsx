@@ -222,21 +222,22 @@ export default function MapLayout() {
                 {/* 🧭 Vẽ đường đi nếu có */}
                 <RenderRoute />
 
-                {/* 👉 Marker kết quả từ Nominatim */}
-                <SearchResultMarkers />
+                {/* 👉 Marker kết quả từ Nominatim - chỉ hiển thị khi có searchResults */}
+                {searchResults.length > 0 && <SearchResultMarkers />}
 
-                {/* Render các custom marker cho từng place hiển thị */}
-                {toDisplayPlaces?.map((place) => (
-                    <CustomMapMarker
-                        key={place.id}
-                        isCardSelected={selectedPosition !== null && selectedPosition.lat === place.lat && selectedPosition.lon === place.lon}
-                        position={{lat: place.lat, lon: place.lon}}
-                        text={place.tags.name}
-                        imagePath={markerIconProps.imagePath}
-                        backgroundColor={markerIconProps.backgroundColor}
-                        onClickMarker={onClickCustomMapMarker}
-                    />
-                ))}
+                {/* Render các custom marker cho từng place hiển thị - chỉ hiển thị khi KHÔNG có searchResults */}
+                {searchResults.length === 0 &&
+                    toDisplayPlaces?.map((place) => (
+                        <CustomMapMarker
+                            key={place.id}
+                            isCardSelected={selectedPosition !== null && selectedPosition.lat === place.lat && selectedPosition.lon === place.lon}
+                            position={{lat: place.lat, lon: place.lon}}
+                            text={place.tags.name}
+                            imagePath={markerIconProps.imagePath}
+                            backgroundColor={markerIconProps.backgroundColor}
+                            onClickMarker={onClickCustomMapMarker}
+                        />
+                    ))}
 
                 {/* Marker vị trí hiện tại người dùng / store */}
                 <LocationMarker flyToPositionType={flyToPositionType} />

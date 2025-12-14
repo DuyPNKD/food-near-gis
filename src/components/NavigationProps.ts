@@ -23,11 +23,4 @@ export const navigationProps: NavigationProps[] = [
         imgAlt: "Food Court Icon",
         text: "Khu ẩm thực",
     },
-    {
-        categoryKey: CategoryKey.amenity,
-        category: Category.bakery,
-        imgSrc: "./bakery.svg",
-        imgAlt: "Bakery Icon",
-        text: "Tiệm bánh",
-    },
 ];
